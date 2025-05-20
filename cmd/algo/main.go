@@ -1,7 +1,16 @@
 package main
 
-import "algo/cmd/algo/cli"
+import (
+	"algo/internal/tui"
+	"os"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 func main() {
-	cli.Execute()
+	p := tea.NewProgram(tui.New(), tea.WithAltScreen())
+
+	if _, err := p.Run(); err != nil {
+		os.Exit(1)
+	}
 }

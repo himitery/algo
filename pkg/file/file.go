@@ -1,30 +1,31 @@
 package file
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 )
 
-func Save(path string, filename string, data []byte) error {
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	path = filepath.Join(dir, path)
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		if err := os.MkdirAll(path, os.ModePerm); err != nil {
+func Save[T any](path string, data T) error {
+	dir := filepath.Dir(path)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			return err
 		}
 	}
 
-	file, err := os.Create(filepath.Join(path, filename))
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	if _, err := file.Write(data); err != nil {
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	if _, err := file.Write(jsonData); err != nil {
 		return err
 	}
 

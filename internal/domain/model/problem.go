@@ -1,6 +1,6 @@
 package model
 
 type Problem struct {
-	Question []string `json:"input"`
-	Answer   []string `json:"expected"`
+	Question interface{} `json:"inputs"`
+	Answer   interface{} `json:"expected"`
 }
